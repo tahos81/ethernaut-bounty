@@ -16,8 +16,10 @@ interface sERC20 {
 contract ScriptTest is DSTest {
     Cheats constant cheats = Cheats(HEVM_ADDRESS);
     
+    //change
     address constant deployer = 0x11dc744F9b69b87a1eb19C3900e0fF85B6853990;
 
+    //change
     sNFT constant nft = sNFT(0x0fd6EDC52Ed631d15fF03EeDa70103a92a819EE4);
     sERC20 constant EXP = sERC20(0xff1Bb5806eD355946295D1d6DA2BBA2696396095);
 
