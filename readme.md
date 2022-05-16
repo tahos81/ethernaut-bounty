@@ -1,6 +1,9 @@
 # Description 
 
-Ethernaut Bounty
+Ethernaut Bounty.
+
+An ERC20 token called EXP and an ERC721 token called EXPCounter which changes URI based on the number of EXP token address holds, both are Soulbound. NFT is one per wallet.
+Corresponding NFT URI updates automatically when EXP tokens are minted or burned.
 
 # Testing
 
