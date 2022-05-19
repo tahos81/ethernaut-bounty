@@ -9,6 +9,8 @@ interface ISoulboundNFT {
     function balanceOf(address owner) external view returns (uint256);
 }
 
+/// @notice Soulbound ERC20, will be minted by ethernautDAO as a reward token.
+/// @author Tahos81 (https://github.com/tahos81/ethernaut-bounty/blob/main/src/SoulboundERC20.sol)
 contract SoulboundERC20 is ERC20, Ownable {
 
     error Soulbound();

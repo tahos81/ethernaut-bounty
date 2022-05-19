@@ -11,4 +11,4 @@ Corresponding NFT URI updates automatically when EXP tokens are minted or burned
 
 # Scripts
 
-`forge script --broadcast (path to file) --sig (function, example: "deploy()") --private-keys (your PK) --fork-url (rpc endpoint) -vvvv`
+`forge script --broadcast (path to file) --sig (function, example: "deploy()") --private-keys (your PK) --fork-url (rpc url) -vvvv`
