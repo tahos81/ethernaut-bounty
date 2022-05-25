@@ -20,7 +20,7 @@ contract DeployTest is DSTest {
 
     function deploy() public {
         cheats.startBroadcast(deployer);
-        SoulboundNFT sNFT = new SoulboundNFT("EXPCounter", "XPC", sERC20Adress);
-        SoulboundERC20 sERC20 = new SoulboundERC20("EXP", "EXP", sNFTAdress);
+        SoulboundNFT sNFT = new SoulboundNFT("Ethernaut XP Counter", "EXPC", sERC20Adress);
+        SoulboundERC20 sERC20 = new SoulboundERC20("Ethernaut XP", "EXP", sNFTAdress);
     }
 }
