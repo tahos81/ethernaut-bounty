@@ -29,8 +29,8 @@ contract ScriptTest is DSTest {
 
     function setUp() public {
         cheats.label(0x11dc744F9b69b87a1eb19C3900e0fF85B6853990, "deployer");
-        cheats.label(0x0fd6EDC52Ed631d15fF03EeDa70103a92a819EE4, "sNFT");
-        cheats.label(0xff1Bb5806eD355946295D1d6DA2BBA2696396095, "sERC20");
+        cheats.label(0x3187E5Dc282CF5c4293E0E7149F39B687C2261B9, "sNFT");
+        cheats.label(0x560816bdeeb5b4A09809dF7cb699cE121f59140a, "sERC20");
     }
 
     function nftMint() public {
