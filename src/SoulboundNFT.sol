@@ -4,6 +4,7 @@ pragma solidity ^0.8.13;
 import "openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "openzeppelin-contracts/contracts/utils/Strings.sol";
 import { Base64 } from "./libraries/Base64.sol";
+import { URI } from "./libraries/URI.sol";
 
 interface IERC20 {
     function balanceOf(address _owner) external view returns (uint256);
@@ -15,14 +16,9 @@ contract SoulboundNFT is ERC721URIStorage {
 
     error Soulbound();
     
-    //License: CC Attribution. Made by game-icons.net: https://game-icons.net/
-    string constant SVGpart1 = '<svg width="270" height="270" viewBox="0 0 270 270" xmlns="http://www.w3.org/2000/svg"><path fill="url(#a)" d="M0 0h142.383v142.383H0z"/><defs><filter id="a" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="270" width="270"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity=".625" width="200%" height="200%"/></filter></defs><path d="M135 12.129c-8.478 0-17.073 1.967-25.406 5.4-1.121 3.441-2.045 7.784-2.572 12.527-.691 6.217-.912 13.029-.986 19.416 17.858-1.953 40.071-1.953 57.929 0-.074-6.388-.295-13.199-.986-19.417-.527-4.742-1.45-9.085-2.572-12.526-8.334-3.433-16.929-5.4-25.407-5.4zm53.032 10.195c4.912 3.72 9.549 7.846 13.86 12.252a21.639 21.639 0 0 1 4.762-9.331zm-89.664.786C80.082 33.773 64.066 50.908 54.835 68.638c-17.445 33.505-20.93 82.77-.279 113.273 15.468 22.845 51.058 31.663 80.444 31.663 29.386 0 64.977-8.817 80.445-31.664 20.652-30.503 17.165-79.768-.279-113.273-9.231-17.729-25.247-34.864-43.532-45.527.305 1.925.557 3.896.779 5.898.803 7.221 1.008 14.87 1.062 21.762 9.863 1.662 17.423 4.074 20.588 7.238 16.875 16.875 39.834 71.031 8.438 118.125-19.857 29.784-115.143 29.784-135 0-31.396-47.094-8.438-101.25 8.438-118.125 3.164-3.164 10.724-5.576 20.587-7.239.054-6.892.26-14.54 1.063-21.762.221-2.002.475-3.973.779-5.898zM33.75 25.313a8.438 8.438 0 0 0-8.438 8.438 8.438 8.438 0 0 0 3.691 6.975v36.003l9.493-7.12V40.716a8.438 8.438 0 0 0 3.692-6.966 8.438 8.438 0 0 0-8.438-8.438zm189.216 1.941c-6.755 0-12.129 5.374-12.129 12.129s5.374 12.129 12.129 12.129 12.129-5.374 12.129-12.129-5.374-12.129-12.129-12.129zm13.327 29.112c-3.681 2.899-8.31 4.638-13.326 4.638-.393 0-.78-.014-1.168-.035a114.207 114.207 0 0 1 1.255 2.304l15.742 11.807zm-125.941 1.318c-9.1.047-19.647 1.981-28.072 8.501-14.045 10.867-22.694 60.52-17.661 77.395 8.745-32.572 16.871-65.401 56.911-85.047a70.371 70.371 0 0 0-11.178-.849zm-71.22 23.314L21.173 94.467l-7.636 38.184 20.134 24.16c-5.773-24.534-3.046-52.061 5.461-75.813zm191.737 0c8.506 23.753 11.233 51.28 5.461 75.813l20.134-24.16-7.636-38.184zM56.239 198.244c-1.889.617-3.824 1.796-5.422 3.393-2.181 2.181-3.523 4.973-3.778 7.438.111.192.318.61.912 1.14 1.294 1.154 3.53 2.726 6.395 4.408 5.731 3.364 14.001 7.255 23.311 10.875 11.168 4.344 23.915 8.281 35.721 10.747v-14.56c-20.814-2.7-42.133-9.664-57.14-23.441zm157.523 0c-15.008 13.777-36.327 20.741-57.141 23.441v14.56c11.806-2.466 24.553-6.404 35.721-10.747 9.31-3.62 17.581-7.511 23.311-10.875 2.866-1.682 5.102-3.254 6.395-4.409.594-.529.802-.948.912-1.139-.254-2.465-1.596-5.258-3.777-7.438-1.598-1.598-3.533-2.776-5.422-3.393zM40.775 216.528 9.492 237.384v23.124h19.512v-9.492h9.492v9.492h193.008v-9.492h9.492v9.492h19.512v-23.124l-31.283-20.855c-.283.257-.57.512-.856.768-2.068 1.844-4.71 3.633-7.909 5.512-6.398 3.755-15.003 7.775-24.677 11.537-19.349 7.523-42.721 14.033-60.783 14.033s-41.434-6.509-60.783-14.033c-9.674-3.763-18.279-7.782-24.677-11.537-3.199-1.877-5.841-3.668-7.909-5.512-.286-.257-.573-.512-.856-.769zm82.096 6.108v15.289c4.343.613 8.444.962 12.129.962 3.685 0 7.786-.349 12.129-.962v-15.289a171.34 171.34 0 0 1-24.258 0z"/><text font-size="75px" dominant-baseline="middle" text-anchor="middle" x="50%" y="50%"';
-    string constant SVGtext0 = ' fill="#444">';
-    string constant SVGtext1 = ' fill="#a44">';
-    string constant SVGtext2 =  ' font-weight="bold" fill="#4a4" font-family="sans-serif">';
-    string constant SVGtext3 =  ' font-style="italic" font-weight="bold" fill="#28f" font-family="sans-serif">';
-    string constant SVGtext4 =  ' font-style="italic" font-weight="bolder" fill="#28f" font-family="fantasy">';
-    string constant SVGpartFinal = '</text></svg>';
+    //License: CC Attribution. Made by game-icons.net: https://game-icons.net/ and Aleta
+    string constant initialSVGpart1 = '<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="b" x1="100%" y1="0%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#ffffff"/><stop offset="10%" style="stop-color:#666666"/><stop offset="30%" style="stop-color:#333333"/><stop offset="70%" style="stop-color:#333333"/><stop offset="90%" style="stop-color:#666666"/><stop offset="100%" style="stop-color:#ffffff"/></linearGradient><filter id="a" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse" height="270" width="270"><feDropShadow dx="1" dy="1" stdDeviation="2" flood-opacity=".625" width="200%" height="200%"/></filter></defs><pattern id="c" x="0" y="0" width="100%" height="100%"><rect x="-150%" width="200%" height="150%" fill="url(#b)" transform="rotate(-65)"><animate attributeType="XML" attributeName="x" from="-150%" to="50%" dur="4s" repeatCount="indefinite"/></rect><rect x="-350%" width="200%" height="150%" fill="url(#b)" transform="rotate(-65)"><animate attributeType="XML" attributeName="x" from="-350%" to="-150%" dur="4s" repeatCount="indefinite"/></rect></pattern><path fill="url(#c)" d="M280.2 51.8h-3.9v-9.7h4c1.7 0 3 .5 3.8 1.5.8 1 1.2 2.1 1.2 3.3 0 .7-.2 1.5-.5 2.2-.3.8-.9 1.4-1.7 1.9-.6.5-1.6.8-2.9.8zm-79.1 31c.1-12.1.6-25 1.9-36.8 1-9 2.8-17.2 4.9-23.8 15.7-6.5 32-10.2 48.1-10.2s32.4 3.7 48.2 10.2c2.1 6.5 3.9 14.8 4.9 23.8 1.3 11.8 1.7 24.7 1.9 36.8-33.9-3.7-76.1-3.7-109.9 0zm71.8-18h3.5v-9.6h3.9c2 0 3.6-.4 5-1.2 1.3-.8 2.3-1.8 2.8-3.1.6-1.3.9-2.6.9-4.1 0-2.5-.8-4.5-2.4-5.9-1.6-1.4-3.8-2.1-6.6-2.1h-7v26zm-30.3-3.4h-13.9v-8h12V50h-12v-7.9h13.4v-3.3h-16.9v26h17.4v-3.4zm7.9 3.4 6.2-10.4 6.8 10.4h4.5l-8.6-13.2 8.2-12.9h-4.2l-5.9 9.9-6.5-9.9h-4.4l8.2 12.6-8.6 13.4h4.3zM233 403.2v29c8.2 1.2 16 1.8 23 1.8s14.8-.7 23-1.8v-29c-7.8.6-15.5.8-23 .8s-15.2-.3-23-.8zM89.2 377.5c.2.4.6 1.2 1.7 2.2 2.5 2.2 6.7 5.2 12.1 8.4 10.9 6.4 26.5 13.8 44.2 20.6 21.2 8.2 45.4 15.7 67.7 20.4v-27.6c-39.5-5.1-79.9-18.3-108.4-44.5-3.6 1.2-7.3 3.4-10.3 6.4-4 4.1-6.5 9.4-7 14.1zm316.2-20.6c-28.5 26.1-68.9 39.3-108.4 44.5V429c22.4-4.7 46.6-12.1 67.7-20.4 17.7-6.9 33.3-14.2 44.2-20.6 5.4-3.2 9.7-6.2 12.1-8.4 1.1-1 1.5-1.8 1.7-2.2-.5-4.7-3-10-7.2-14.1-2.9-3-6.6-5.2-10.1-6.4zM103.5 334c29.3 43.3 96.8 60 152.5 60s123.2-16.7 152.5-60c39.2-57.8 32.5-151.3-.5-214.8-17.5-33.6-47.9-66.1-82.6-86.3.6 3.6 1.1 7.4 1.5 11.2 1.5 13.7 1.9 28.2 2 41.3 18.7 3.2 33 7.7 39 13.7 32 32 75.5 134.7 16 224-37.7 56.5-218.3 56.5-256 0-59.5-89.3-16-192 16-224 6-6 20.3-10.6 39-13.7.1-13.1.5-27.6 2-41.3.4-3.8.9-7.5 1.5-11.2-34.7 20.2-65 52.7-82.6 86.3-32.9 63.5-39.5 156.9-.3 214.8zm83-301.2zM156 114.5c-26.6 20.6-43 114.8-33.5 146.8 16.6-61.8 32-124 107.9-161.3-7-1.1-14.1-1.6-21.2-1.6-17.2.1-37.2 3.7-53.2 16.1zm-49.4 242.4zm237 98.1c-1.7-.7-3.4-1.1-4.9-1.1h-6.4v24.7h4.6c4.1 0 7.3-1 9.7-3.1 2.4-2.1 3.6-5.1 3.6-9 0-3.2-.7-5.7-2-7.6-1.4-1.9-2.9-3.2-4.6-3.9zm29 16.8h7.8l-3.8-9.7-4 9.7zM178.5 468c-1-.8-2.2-1.1-3.7-1.1-2.1 0-3.7.7-5.1 2.2-1.3 1.4-2 3.3-2 5.5 0 .5 0 1 .1 1.2l13-4.8c-.5-1.2-1.3-2.2-2.3-3zm79.7.6c-1.4-1-2.9-1.5-4.7-1.5-1.3 0-2.6.3-3.7 1-1.1.6-2 1.6-2.7 2.7-.7 1.2-1 2.5-1 4 0 1.4.3 2.8 1 3.9.7 1.2 1.6 2.1 2.8 2.8 1.2.7 2.4 1.1 3.8 1.1 1.8 0 3.4-.5 4.7-1.5 1.3-1 2.2-2.4 2.5-4.2v-4.4c-.4-1.7-1.3-3-2.7-3.9zm164.1-13.3c-1.9-1.1-3.9-1.7-6.2-1.7-2.3 0-4.3.6-6.2 1.7-1.9 1.1-3.3 2.7-4.4 4.6s-1.6 4.1-1.6 6.5c0 2.3.5 4.4 1.6 6.4 1.1 1.9 2.6 3.5 4.5 4.6 1.9 1.1 4 1.7 6.3 1.7 2.2 0 4.3-.6 6.1-1.7 1.8-1.1 3.3-2.7 4.3-4.6 1-1.9 1.6-4.1 1.6-6.4 0-2.4-.5-4.5-1.6-6.5s-2.6-3.5-4.4-4.6zm71.7-32.2V498H18v-74.9l59.3-39.5c.5.5 1.1 1 1.6 1.5 3.9 3.5 8.9 6.9 15 10.5 12.1 7.1 28.5 14.7 46.8 21.9 36.7 14.3 81 26.6 115.3 26.6s78.6-12.3 115.3-26.6c18.3-7.1 34.7-14.8 46.8-21.9 6.1-3.6 11.1-7 15-10.5.5-.5 1.1-1 1.6-1.5l59.3 39.5zM84.8 453.7h23.8v-3.9H84.8v3.9zm1.8 11.7v3.9h20.2v-3.9H86.6zm22.6 16.8h-25v3.9h24.9v-3.9zm19.6-18.3h-6.1V454h-5.1v9.9h-4.1v4h4.1v18.3h5.1v-18.3h6.1v-4zm27.2 5.8c0-2-.7-3.6-2.1-4.8-1.4-1.2-3.1-1.9-5.2-1.9-2 0-3.8.5-5.4 1.3-1.6.9-2.8 2.1-3.6 3.6v-23.5h-4.9v41.8h5v-10.5c0-1.6.3-3 .9-4.3s1.4-2.3 2.5-3c1-.7 2.2-1.1 3.5-1.1 1.4 0 2.4.4 3.1 1.1.7.7 1.1 1.7 1.1 3v14.8h5.1v-16.5zm12.8 9.1 17.7-6.2c-.7-3.1-2.1-5.4-4-7.2-2-1.7-4.4-2.6-7.3-2.6-2.3 0-4.4.5-6.3 1.6-1.9 1.1-3.4 2.5-4.5 4.3-1.1 1.8-1.6 3.8-1.6 6 0 2.3.5 4.3 1.5 6.1 1 1.8 2.4 3.2 4.3 4.2s4 1.5 6.5 1.5c1.3 0 2.6-.2 4-.7s2.7-1.1 3.9-1.9l-2.3-3.7c-1.8 1.3-3.6 1.9-5.5 1.9-1.4 0-2.7-.3-3.8-.9-1-.4-1.9-1.2-2.6-2.4zm37.8-15.9c-.9 0-1.9.3-3.1.8-1.2.5-2.3 1.2-3.4 2.2-1.1.9-1.9 2-2.5 3.2l-.4-5.3h-4.5v22.4h5V476c0-1.4.4-2.8 1.1-4.1.7-1.3 1.8-2.3 3.1-3 1.3-.7 2.8-1 4.4-1l.3-5zm27.7 6.8c0-2-.7-3.6-2.1-4.8-1.4-1.2-3.1-1.9-5.2-1.9s-3.9.5-5.5 1.4-2.8 2.2-3.6 3.8l-.3-4.3h-4.5v22.4h5v-10.5c0-2.4.6-4.5 1.9-6s2.9-2.4 4.9-2.4c1.4 0 2.4.4 3.1 1.1.7.7 1.1 1.7 1.1 3v14.8h5.1v-16.6zm31.6-5.9h-4.6l-.4 3.6c-.9-1.3-2-2.4-3.4-3.2-1.4-.8-3.1-1.2-5-1.2-2.1 0-4.1.5-5.8 1.5-1.7 1-3.1 2.4-4.2 4.2-1 1.8-1.5 4-1.5 6.4 0 2.4.5 4.6 1.5 6.3 1 1.8 2.3 3.1 4 4s3.6 1.4 5.8 1.4c1.9 0 3.6-.4 5.1-1.3 1.5-.9 2.7-1.8 3.5-2.9v3.7h5v-22.5zm29.6 0h-5v10.4c0 1.6-.3 3-.9 4.3-.6 1.3-1.4 2.3-2.4 3.1-1 .7-2.1 1.1-3.3 1.1-1.3 0-2.3-.4-3-1.2-.7-.7-1-1.7-1.1-3v-14.7h-5v16.5c.1 2 .8 3.6 2.1 4.8 1.3 1.2 3 1.9 5 1.9 1.9 0 3.7-.5 5.3-1.4 1.6-1 2.8-2.2 3.5-3.7l.3 4.3h4.5v-22.4zm22.1.1h-6.1V454h-5.1v9.9h-4.1v4h4.1v18.3h5.1v-18.3h6.1v-4zm40.6 3.1c0-3.6-.7-6.9-2.2-10-1.5-3.1-3.9-5.7-7.2-7.6-3.3-2-7.5-2.9-12.5-2.9h-11.9v39.7h13.8c3.6 0 7-.8 10-2.3 3-1.6 5.5-3.8 7.3-6.7 1.8-3 2.7-6.4 2.7-10.2zm37 19.2-17.9-41.3h-.4L359 486.2h7.7l3.2-7.8H383l3.1 7.8h9.1zm41.2-19.8c0-3.6-.9-7-2.8-10.1-1.9-3.1-4.3-5.6-7.5-7.5-3.1-1.9-6.5-2.8-10.1-2.8-3.6 0-7 .9-10.1 2.8-3.1 1.9-5.6 4.3-7.4 7.5-1.8 3.1-2.7 6.5-2.7 10.1 0 3.7.9 7.1 2.7 10.2 1.8 3.1 4.3 5.6 7.4 7.4 3.1 1.8 6.5 2.7 10.2 2.7 3.6 0 7-.9 10.1-2.7 3.1-1.8 5.6-4.3 7.5-7.4 1.8-3.2 2.7-6.6 2.7-10.2z"/><text x="50%" y="47%" class="base" fill="url(#c)" dominant-baseline="middle" text-anchor="middle" style="font-family:Josefin Sans,sans-serif;font-size:140px">';
+    string constant initialSVGpart2 = '</text></svg>';
 
     IERC20 immutable EXPToken;
 
@@ -39,7 +35,7 @@ contract SoulboundNFT is ERC721URIStorage {
 
         uint160 tokenId = uint160(msg.sender); 
         
-        string memory initialSVG = string.concat(SVGpart1, SVGtext0, "0", SVGpartFinal);
+        string memory initialSVG = string.concat(initialSVGpart1, "0", initialSVGpart2);
         
         string memory json = Base64.encode(
             bytes(
@@ -61,30 +57,9 @@ contract SoulboundNFT is ERC721URIStorage {
 
     //gets the EXP token balance of the address and updates the URI of the corresponding NFT
     function updateURI(address addressToUpdate) external {
-        uint balance = EXPToken.balanceOf(addressToUpdate);
         uint tokenId = uint160(addressToUpdate);
 
-        string memory newSVG;
-        
-        if (balance < 20) newSVG = string.concat(SVGpart1, SVGtext0, Strings.toString(balance), SVGpartFinal);
-        else if (balance < 40) newSVG = string.concat(SVGpart1, SVGtext1, Strings.toString(balance), SVGpartFinal);
-        else if (balance < 60) newSVG = string.concat(SVGpart1, SVGtext2, Strings.toString(balance), SVGpartFinal);
-        else if (balance < 80) newSVG = string.concat(SVGpart1, SVGtext3, Strings.toString(balance), SVGpartFinal);
-        else newSVG = string.concat(SVGpart1, SVGtext4, Strings.toString(balance), SVGpartFinal);
-        
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"description": "An NFT showcasing EXP tokens of an individual", "image": "data:image/svg+xml;base64,',
-                        Base64.encode(bytes(newSVG)),
-                        '"}'
-                    )
-                )
-            )
-        );
-
-        string memory newTokenUri = string(abi.encodePacked("data:application/json;base64,", json));
+        string memory newTokenUri = URI.updateURI(addressToUpdate, address(EXPToken));
         
         _setTokenURI(tokenId, newTokenUri);
     }
