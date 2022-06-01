@@ -56,6 +56,7 @@ contract SoulboundNFT is ERC721URIStorage {
     }
 
     //gets the EXP token balance of the address and updates the URI of the corresponding NFT
+    //usually called by erc20 token contract but not restricted to it
     function updateURI(address addressToUpdate) external {
         uint tokenId = uint160(addressToUpdate);
 
